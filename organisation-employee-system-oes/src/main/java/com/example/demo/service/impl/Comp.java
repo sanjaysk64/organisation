@@ -19,6 +19,6 @@ class Comp2 implements Comparator<Employee> {
 
 		Integer s1 = o1.getYearOfExperience();
 		Integer s2 = o2.getYearOfExperience();
-		return -s1.compareTo(s2);
+		return s1.compareTo(s2);
 	}
 }

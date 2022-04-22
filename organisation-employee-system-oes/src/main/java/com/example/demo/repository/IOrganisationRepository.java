@@ -10,5 +10,6 @@ import com.example.demo.model.Organisation;
 @Repository
 public interface IOrganisationRepository extends JpaRepository<Organisation, Integer> {
 	public List<Organisation> findByDept(String dept);
+	
 
 }

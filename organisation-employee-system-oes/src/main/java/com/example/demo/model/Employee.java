@@ -1,11 +1,14 @@
 package com.example.demo.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 public class Employee implements Serializable {
@@ -20,13 +23,20 @@ public class Employee implements Serializable {
 	private double salary;
 	private double appraisal;
 	private Integer leaves;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Kolkata")
+	private Date joining_date;
+	@JsonFormat(shape = JsonFormat.Shape.STRING, timezone = "Asia/Kolkata")
+	private Date leaving_date;
 
 	public Employee() {
 		super();
 	}
 
+	
+	
+
 	public Employee(Integer empid, String name, Integer age, String qualification, Integer yearOfExperience,
-			double salary, double appraisal, Integer leaves) {
+			double salary, double appraisal, Integer leaves, Date joining_date, Date leaving_date) {
 		super();
 		this.empid = empid;
 		this.name = name;
@@ -36,7 +46,12 @@ public class Employee implements Serializable {
 		this.salary = salary;
 		this.appraisal = appraisal;
 		this.leaves = leaves;
+		this.joining_date = joining_date;
+		this.leaving_date = leaving_date;
 	}
+
+
+
 
 	public Integer getEmpid() {
 		return empid;
@@ -102,5 +117,34 @@ public class Employee implements Serializable {
 		this.leaves = leaves;
 	}
 
+
+
+
+	public Date getJoining_date() {
+		return joining_date;
+	}
+
+
+
+
+	public void setJoining_date(Date joining_date) {
+		this.joining_date = joining_date;
+	}
+
+
+
+
+	public Date getLeaving_date() {
+		return leaving_date;
+	}
+
+
+
+
+	public void setLeaving_date(Date leaving_date) {
+		this.leaving_date = leaving_date;
+	}
+
+	
 	
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,11 +45,16 @@ public class OrganisationServiceImpl implements IOrganizationService {
 	}
 
 	@Override
-	public boolean update(Employee e) {
-		employeeRepository.save(e);
+	public boolean update(Integer id, Employee e) {
+
+		Employee employee = employeeRepository.findById(id).get();
+
+		employee.setYearOfExperience(e.getYearOfExperience());
+		employeeRepository.save(employee);
+
 		return true;
 	}
-	
+
 	// //2. Get employee details of only Technical dept
 
 	@Override
@@ -68,7 +74,7 @@ public class OrganisationServiceImpl implements IOrganizationService {
 		List<Organisation> list = organisationRepository.findByDept(dept);// repo
 		List<Employee> emp = new ArrayList<Employee>();
 		for (Organisation organisation : list) {
-			emp = organisation.getEmployees();//list
+			emp = organisation.getEmployees();// list
 
 		}
 		Collections.sort(emp, new Comp());
@@ -76,7 +82,7 @@ public class OrganisationServiceImpl implements IOrganizationService {
 		return emp;
 
 	}
-	
+
 	@Override
 	public List<Employee> sortByExp(String dept) {
 
@@ -93,9 +99,19 @@ public class OrganisationServiceImpl implements IOrganizationService {
 	}
 
 	@Override
-	public boolean delete(Integer id) {
+	public String delete(Integer id) {
+
+		Employee emp = employeeRepository.findById(id).get();
+
+		Date d1 = emp.getJoining_date();
+		Date d2 = emp.getLeaving_date();
+		Long l = d2.getTime() - d1.getTime();
+		long hours = (l / (1000 * 60 * 60));
+		long price = hours * 100;
+
 		employeeRepository.deleteById(id);
-		return true;
+
+		return "the settlement ammount =" + price;
 	}
 
 	@Override
@@ -104,6 +120,9 @@ public class OrganisationServiceImpl implements IOrganizationService {
 		Organisation o = organisationRepository.getById(id);// depid
 		List<Employee> emp = new ArrayList<Employee>();
 		emp = o.getEmployees();// get emp details
+		Date d1 = new Date();
+		employee.setJoining_date(d1);
+	        
 		emp.add(employee);// adding employee...
 		o.setEmployees(emp);
 		return organisationRepository.save(o);
@@ -116,13 +135,28 @@ public class OrganisationServiceImpl implements IOrganizationService {
 		List<Employee> e = employeeRepository.findByName(name);
 		for (Employee employee : e) {
 
-			if (employee.getLeaves() >= 10) {     //comp
+			if (employee.getLeaves() >= 10) { // comp
+
+				 
+				employee.setLeaves(employee.getLeaves()+1);
+				
+				employeeRepository.save(employee);	
+				
+				
 				return "only 1 leave granted";
 
-			} else {
+			} 
+			else {
+				employee.setLeaves(employee.getLeaves()+leaves);
+				
+				employeeRepository.save(employee);	
+				
+				
+
 				return leaves + "-leaves granted";
 			}
-		}
+ 		}
+
 
 		return null;
 	}
@@ -156,7 +190,30 @@ public class OrganisationServiceImpl implements IOrganizationService {
 
 	@Override
 	public Optional<Employee> getById(Integer id) {
- 		return employeeRepository.findById(id);
+		return employeeRepository.findById(id);
 
+	}
+
+	// using Streams
+	@Override
+	public List<Employee> SortByNameDepStreams(String dept) {
+
+		List<Organisation> list = organisationRepository.findByDept(dept);
+		List<Employee> e = new ArrayList<Employee>();
+		for (Organisation organisation : list) {
+			e = organisation.getEmployees();
+		}
+
+		e.stream().sorted((i1, i2) -> i1.getName().compareTo(i2.getName())).collect(Collectors.toList());
+		return e;
+	}
+
+	@Override
+	public List<Organisation> getEmpBasedOnDepStreams(String dept) {
+		List<Organisation> list = organisationRepository.findByDept(dept);
+
+		List<Organisation> l = list.stream().filter((i1) -> i1.getDept().equals(dept)).collect(Collectors.toList());
+
+		return l;
 	}
 }

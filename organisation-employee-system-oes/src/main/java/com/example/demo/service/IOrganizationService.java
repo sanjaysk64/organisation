@@ -14,26 +14,25 @@ public interface IOrganizationService {
 	public Organisation saveRecordEmp(Organisation organisation);
 
 	public List<Employee> getAllDetails();
-	
+
 	public Optional<Employee> getById(Integer id);
 
 	public List<Employee> sortedOrderBYName();
 
-	public boolean update(Employee e);
+	public boolean update(Integer id, Employee e);
 
- 
 	// 2. Get employee details of only Technical dept
-	List<Organisation> getEmpBasedOnDep(String dept);
+	public List<Organisation> getEmpBasedOnDep(String dept);
 
 	// 3. Get employee details in sorted order by name from HR dept
-	List<Employee> sortByNameDept(String dept);
+	public List<Employee> sortByNameDept(String dept);
 
 	// 4. Get employee details in sorted order by years of exp from public relations
 	// dept
-	List<Employee> sortByExp(String dept);
+	public List<Employee> sortByExp(String dept);
 
 	// 8. Create an API for employees to resign. Delete his record from the DB
-	public boolean delete(Integer id);
+	public String delete(Integer id);
 
 	// 5. Add an employee to a specified dept with mentioned details in the payload
 	public Organisation addEmp(Integer id, Employee employee);
@@ -41,5 +40,10 @@ public interface IOrganizationService {
 	public String applyLeave(String name, Integer leaves);
 
 	public List<Employee> appraisalOfEligableEmployee(String dept);
+
+	// streams
+	public List<Employee> SortByNameDepStreams(String dept);
+
+	public List<Organisation> getEmpBasedOnDepStreams(String dept);
 
 }
